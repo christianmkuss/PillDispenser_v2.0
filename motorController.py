@@ -14,20 +14,21 @@ GPIO.setmode(GPIO.BOARD)
 
 # Which GPIO pin to which motor
 waterMotor = 12
-Motor1 = 16
-Motor2 = 18
-Motor3 = 22
+Motor1Pin = 16
+Motor2Pin = 18
+Motor3Pin = 22
 
 # Specify them as outputs
-GPIO.setup(Motor1, GPIO.OUT)
-GPIO.setup(Motor2, GPIO.OUT)
-GPIO.setup(Motor3, GPIO.OUT)
-
+Motor1 = GPIO.PWM(Motor1Pin, 50)
+Motor2 = GPIO.PWM(Motor2Pin, 50)
+Motor3 = GPIO.PWM(Motor3Pin, 50)
 water = GPIO.PWM(waterMotor, 50)
 
-# This is a guess for us. I don't know if 7.5 is 90 degrees or what
+# Turn everything off
+Motor1.start(7.5)
+Motor2.start(7.5)
+Motor3.start(7.5)
 water.start(7.5)
-water.ChangeDutyCycle(7.5)
 
 # We in this for the long haul
 while True:
@@ -88,38 +89,48 @@ while True:
     # Update the current time
     now = datetime.datetime.now()
     print(now)
-
+    sleep = 0
     watering = False
     for x in range(len(pill1_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill1_hour_list[x]) and now.minute == int(pill1_minute_list[x]):
-            GPIO.output(Motor1, GPIO.LOW)
-            time.sleep(pill1_numpills[x])
+            Motor1.ChangeDutyCycle(10)
+            sleep += pill1_numpills[x]*2.6
+            time.sleep(pill1_numpills[x]*2.6)
+            Motor1.ChangeDutyCycle(7.5)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     for x in range(len(pill2_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill2_hour_list[x]) and now.minute == int(pill2_minute_list[x]):
-            GPIO.output(Motor2, GPIO.LOW)
-            time.sleep(pill2_numpills[x])
+            sleep += pill2_numpills[x] * 2.6
+            Motor2.ChangeDutyCycle(10)
+            time.sleep(pill2_numpills[x] * 2.6)
+            Motor2.ChangeDutyCycle(7.5)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     for x in range(len(pill3_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill3_hour_list[x]) and now.minute == int(pill3_minute_list[x]):
-            GPIO.output(Motor3, GPIO.LOW)
-            time.sleep(pill3_numpills[x])
+            Motor3.ChangeDutyCycle(10)
+            sleep += pill3_numpills[x] * 2.6
+            time.sleep(pill3_numpills[x] * 2.6)
+            Motor3.ChangeDutyCycle(7.5)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     if watering:
+        # Set the water servo to 0 degrees
         water.ChangeDutyCycle(2.5)
         arduinoSerialData.write('y')
+        sleep += 8
+        time.sleep(6)
+        water.ChangeDutyCycle(7.5)
         os.system('pills.mp3')
     else:
         arduinoSerialData.write('n')
 
     # This is dependent on how fast the machine is. For us it would generally take a second to run through the code
-    time.sleep(56)
+    time.sleep(60-sleep)
