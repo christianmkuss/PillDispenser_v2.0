@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Link the stylesheet and js file to the html -->
+    <!-- We using bootstrap up in here ;) -->
+    <meta http-equiv="refresh" content="30">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../static/timescript.js"></script>
+    <link rel="stylesheet" href="../static/stylesheet.css?q=128054978"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,300,700" rel="stylesheet">
+</head>
+
+<body onload="startTime()">
+<h2 id="txt"></h2>        <!-- This is where the current time will be displayed -->
+<div class="text-center row">
+    <div class="col-sm-4">
+    <p id="pill1name">{{ Pill1_Name }}</p>
+    <table id="pill1">
+        <tbody>
+        <tr>
+            <th>Number of Pills</th>
+            <th>Time Dispensed</th>
+        </tr>
+        <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+        {% for x in range(0, Pill1_Hour_List|length) %}
+        <tr>
+            <td class="pill1num">{{ Pill1_Num[x] }}</td>
+            <td class="pill1Time"> {{ Pill1_Hour_List[x] }} : {{ Pill1_Minute_List[x] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-sm-4">
+    <p id="pill2name">{{ Pill2_Name }}</p>
+    <table id="pill2">
+        <tbody>
+        <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+        <tr>
+            <th>Number of Pills</th>
+            <th>Time Dispensed</th>
+        </tr>
+        {% for x in range(0, Pill2_Hour_List|length) %}
+        <tr>
+            <td class="pill2num">{{ Pill2_Num[x] }}</td>
+            <td class="pill2Time"> {{ Pill2_Hour_List[x] }} : {{ Pill2_Minute_List[x] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-sm-4">
+    <p id="pill3name">{{ Pill3_Name }}</p>
+    <table id="pill3">
+        <tbody>
+        <tr>
+            <th>Number of Pills</th>
+            <th>Time Dispensed</th>
+        </tr>
+        <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+        {% for x in range(0, Pill3_Hour_List|length) %}
+        <tr>
+            <td class="pill3num">{{ Pill3_Num[x] }}</td>
+            <td class="pill3Time"> {{ Pill3_Hour_List[x] }} : {{ Pill3_Minute_List[x] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+</body>
+</html>
