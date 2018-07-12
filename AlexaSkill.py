@@ -55,6 +55,12 @@ def gpio_control():
     pill2_minute_list = []
     pill3_hour_list = []
     pill3_minute_list = []
+    pill4_hour_list = []
+    pill4_minute_list = []
+    pill5_hour_list = []
+    pill5_minute_list = []
+    pill6_hour_list = []
+    pill6_minute_list = []
     am_or_pm = []
 
     # Open the local host port 80 for scraping
@@ -69,9 +75,15 @@ def gpio_control():
         pill1 = page_soup.findAll("td", {"class": "pill1Time"})
         pill2 = page_soup.findAll("td", {"class": "pill2Time"})
         pill3 = page_soup.findAll("td", {"class": "pill3Time"})
+        pill4 = page_soup.findAll("td", {"class": "pill4Time"})
+        pill5 = page_soup.findAll("td", {"class": "pill5Time"})
+        pill6 = page_soup.findAll("td", {"class": "pill6Time"})
         pill1name = page_soup.find("p", {"id": "pill1name"}).text
         pill2name = page_soup.find("p", {"id": "pill2name"}).text
         pill3name = page_soup.find("p", {"id": "pill3name"}).text
+        pill4name = page_soup.find("p", {"id": "pill4name"}).text
+        pill5name = page_soup.find("p", {"id": "pill5name"}).text
+        pill6name = page_soup.find("p", {"id": "pill6name"}).text
 
         # Loop through all elements in the list of pill times and store them in lists
         for element in pill1:
@@ -89,8 +101,24 @@ def gpio_control():
             pill3_hour_list.append(int(this_time[0]))
             pill3_minute_list.append(int(this_time[2]))
 
+        for element in pill4:
+            this_time = element.text.split()
+            pill4_hour_list.append(int(this_time[0]))
+            pill4_minute_list.append(int(this_time[2]))
+
+        for element in pill5:
+            this_time = element.text.split()
+            pill5_hour_list.append(int(this_time[0]))
+            pill5_minute_list.append(int(this_time[2]))
+
+        for element in pill6:
+            this_time = element.text.split()
+            pill6_hour_list.append(int(this_time[0]))
+            pill6_minute_list.append(int(this_time[2]))
+
         # If there are no pills when asked tell them that
-        if len(pill1_hour_list) == 0 and len(pill2_hour_list) == 0 and len(pill3_hour_list) == 0:
+        if len(pill1_hour_list) == 0 and len(pill2_hour_list) == 0 and len(pill3_hour_list) == 0 and \
+                len(pill4_hour_list) == 0 and len(pill5_hour_list) == 0 and len(pill6_hour_list) == 0:
             return statement('You have no pills')
 
         # If any of the pills have times to dispense go to the function and determine the speech output
@@ -103,6 +131,15 @@ def gpio_control():
         if len(pill3_hour_list) > 0:
             first = True
             pills += string_from_lists(pill3_hour_list, pill3_minute_list, am_or_pm, pill3name)
+        if len(pill4_hour_list) > 0:
+            first = True
+            pills += string_from_lists(pill4_hour_list, pill4_minute_list, am_or_pm, pill4name)
+        if len(pill5_hour_list) > 0:
+            first = True
+            pills += string_from_lists(pill5_hour_list, pill5_minute_list, am_or_pm, pill5name)
+        if len(pill6_hour_list) > 0:
+            first = True
+            pills += string_from_lists(pill6_hour_list, pill6_minute_list, am_or_pm, pill6name)
 
         # Return the statement of the pills formatted with the correct speech
         return statement('You have {}'.format(pills))

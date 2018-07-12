@@ -39,6 +39,24 @@
             {% else %}
             <option value="pill3">Add New</option>
             {% endif %}
+
+        {% if Pill4_Name != '' %}
+            <option value="pill4">{{ Pill4_Name }}</option>
+            {% else %}
+            <option value="pill4">Add New</option>
+            {% endif %}
+
+            {% if Pill5_Name != '' %}
+            <option value="pill5">{{ Pill5_Name }}</option>
+            {% else %}
+            <option value="pill5">Add New</option>
+            {% endif %}
+
+            {% if Pill6_Name != '' %}
+            <option value="pill6">{{ Pill6_Name }}</option>
+            {% else %}
+            <option value="pill6">Add New</option>
+            {% endif %}
         </select>
         <br>
 
@@ -71,7 +89,7 @@
     </form>
     <br>
     <div class="text-center row">
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <p id="pill1name">{{ Pill1_Name }}</p>
             <table id="pill1">
                 <tbody>
@@ -89,7 +107,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <p id="pill2name">{{ Pill2_Name }}</p>
             <table id="pill2">
                 <tbody>
@@ -107,7 +125,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <p id="pill3name">{{ Pill3_Name }}</p>
             <table id="pill3">
                 <tbody>
@@ -120,6 +138,60 @@
                 <tr>
                     <td class="pill3num">{{ Pill3_Num[x] }}</td>
                     <td class="pill3Time"> {{ Pill3_Hour_List[x] }} : {{ Pill3_Minute_List[x] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <div class="col-sm-2">
+            <p id="pill4name">{{ Pill4_Name }}</p>
+            <table id="pill4">
+                <tbody>
+                <tr>
+                    <th>Number of Pills</th>
+                    <th>Time Dispensed</th>
+                </tr>
+                <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+                {% for x in range(0, Pill4_Hour_List|length) %}
+                <tr>
+                    <td class="pill4num">{{ Pill4_Num[x] }}</td>
+                    <td class="pill4Time"> {{ Pill4_Hour_List[x] }} : {{ Pill4_Minute_List[x] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            <p id="pill5name">{{ Pill5_Name }}</p>
+            <table id="pill5">
+                <tbody>
+                <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+                <tr>
+                    <th>Number of Pills</th>
+                    <th>Time Dispensed</th>
+                </tr>
+                {% for x in range(0, Pill5_Hour_List|length) %}
+                <tr>
+                    <td class="pill5num">{{ Pill5_Num[x] }}</td>
+                    <td class="pill5Time"> {{ Pill5_Hour_List[x] }} : {{ Pill5_Minute_List[x] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            <p id="pill6name">{{ Pill6_Name }}</p>
+            <table id="pill6">
+                <tbody>
+                <tr>
+                    <th>Number of Pills</th>
+                    <th>Time Dispensed</th>
+                </tr>
+                <!-- This uses Jinja which takes the data from the python/flask file and uses it as variables -->
+                {% for x in range(0, Pill6_Hour_List|length) %}
+                <tr>
+                    <td class="pill6num">{{ Pill6_Num[x] }}</td>
+                    <td class="pill6Time"> {{ Pill6_Hour_List[x] }} : {{ Pill6_Minute_List[x] }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

@@ -6,15 +6,31 @@ pill1_hour_list = []
 pill1_minute_list = []
 pill1_name = ''
 pill1_num = []
+
 pill2_hour_list = []
 pill2_minute_list = []
 pill2_name = ''
 pill2_num = []
+
 pill3_hour_list = []
 pill3_minute_list = []
 pill3_name = ''
 pill3_num = []
 
+pill4_hour_list = []
+pill4_minute_list = []
+pill4_name = ''
+pill4_num = []
+
+pill5_hour_list = []
+pill5_minute_list = []
+pill5_name = ''
+pill5_num = []
+
+pill6_hour_list = []
+pill6_minute_list = []
+pill6_name = ''
+pill6_num = []
 
 # Append to a list the number of minutes (easier to compare)
 def convert_to_min(minute, hour, combined):
@@ -64,7 +80,22 @@ def main():
         'Pill3_Hour_List': pill3_hour_list,
         'Pill3_Minute_List': pill3_minute_list,
         'Pill3_Name': pill3_name,
-        'Pill3_Num': pill3_num
+        'Pill3_Num': pill3_num,
+
+        'Pill4_Hour_List': pill4_hour_list,
+        'Pill4_Minute_List': pill4_minute_list,
+        'Pill4_Name': pill4_name,
+        'Pill4_Num': pill4_num,
+
+        'Pill5_Hour_List': pill5_hour_list,
+        'Pill5_Minute_List': pill5_minute_list,
+        'Pill5_Name': pill5_name,
+        'Pill5_Num': pill5_num,
+
+        'Pill6_Hour_List': pill6_hour_list,
+        'Pill6_Minute_List': pill6_minute_list,
+        'Pill6_Name': pill6_name,
+        'Pill6_Num': pill6_num
     }
     return render_template('arduinotime.html', **templateData)
 
@@ -75,11 +106,17 @@ def add_time():
     global pill1_name
     global pill2_name
     global pill3_name
+    global pill4_name
+    global pill5_name
+    global pill6_name
 
     # Just for sorting
     pill1_combined = []
     pill2_combined = []
     pill3_combined = []
+    pill4_combined = []
+    pill5_combined = []
+    pill6_combined = []
 
     # Take the input from the html page on when the pills are being dispensed
     pill_type = request.form['pills']
@@ -107,20 +144,47 @@ def add_time():
         pill3_minute_list.append(minute)
         pill3_hour_list.append(hour)
 
+    elif pill_type == "pill4":
+        pill4_name = name
+        pill4_num.append(num_pills)
+        pill4_minute_list.append(minute)
+        pill4_hour_list.append(hour)
+
+    elif pill_type == "pill5":
+        pill5_name = name
+        pill5_num.append(num_pills)
+        pill5_minute_list.append(minute)
+        pill5_hour_list.append(hour)
+
+    elif pill_type == "pill6":
+        pill6_name = name
+        pill6_num.append(num_pills)
+        pill6_minute_list.append(minute)
+        pill6_hour_list.append(hour)
+
     # Convert them all to minutes and store in the corresponding combined time
     convert_to_min(pill1_minute_list, pill1_hour_list, pill1_combined)
     convert_to_min(pill2_minute_list, pill2_hour_list, pill2_combined)
     convert_to_min(pill3_minute_list, pill3_hour_list, pill3_combined)
+    convert_to_min(pill4_minute_list, pill4_hour_list, pill4_combined)
+    convert_to_min(pill5_minute_list, pill5_hour_list, pill5_combined)
+    convert_to_min(pill6_minute_list, pill6_hour_list, pill6_combined)
 
     # Sort the pills for being displayed
     sort(pill1_combined)
     sort(pill2_combined)
     sort(pill3_combined)
+    sort(pill4_combined)
+    sort(pill5_combined)
+    sort(pill6_combined)
 
     # After they are sorted put them back into minute and hour lists
     convert_back(pill1_combined, pill1_hour_list, pill1_minute_list)
     convert_back(pill2_combined, pill2_hour_list, pill2_minute_list)
     convert_back(pill3_combined, pill3_hour_list, pill3_minute_list)
+    convert_back(pill4_combined, pill4_hour_list, pill4_minute_list)
+    convert_back(pill5_combined, pill5_hour_list, pill5_minute_list)
+    convert_back(pill6_combined, pill6_hour_list, pill6_minute_list)
 
     # This is the data that gets sent to the html page
     templateData = {
@@ -138,6 +202,21 @@ def add_time():
         'Pill3_Minute_List': pill3_minute_list,
         'Pill3_Name': pill3_name,
         'Pill3_Num': pill3_num,
+
+        'Pill4_Hour_List': pill4_hour_list,
+        'Pill4_Minute_List': pill4_minute_list,
+        'Pill4_Name': pill4_name,
+        'Pill4_Num': pill4_num,
+
+        'Pill5_Hour_List': pill5_hour_list,
+        'Pill5_Minute_List': pill5_minute_list,
+        'Pill5_Name': pill5_name,
+        'Pill5_Num': pill5_num,
+
+        'Pill6_Hour_List': pill6_hour_list,
+        'Pill6_Minute_List': pill6_minute_list,
+        'Pill6_Name': pill6_name,
+        'Pill6_Num': pill6_num,
 
         'pill_type': pill_type
     }
