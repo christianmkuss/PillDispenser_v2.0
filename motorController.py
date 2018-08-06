@@ -1,3 +1,4 @@
+import bs4
 from bs4 import BeautifulSoup
 import RPi.GPIO as GPIO
 import requests
@@ -5,6 +6,7 @@ import datetime
 import serial
 import time
 import os
+import subprocess
 
 # Will communicate to the Arduino using the serial library over usb
 arduinoSerialData = serial.Serial('/dev/ttyUSB0', 9600)
@@ -13,22 +15,26 @@ arduinoSerialData = serial.Serial('/dev/ttyUSB0', 9600)
 GPIO.setmode(GPIO.BOARD)
 
 # Which GPIO pin to which motor
-waterMotor = 12
-Motor1Pin = 16
-Motor2Pin = 18
-Motor3Pin = 22
+waterMotor = 11
+Motor1Pin = 13
+Motor2Pin = 16
+Motor3Pin = 18
 
 # Specify them as outputs
+GPIO.setup(11, GPIO.OUT)
+GPIO.setup(13, GPIO.OUT)
+GPIO.setup(16, GPIO.OUT)
+GPIO.setup(18, GPIO.OUT)
 Motor1 = GPIO.PWM(Motor1Pin, 50)
 Motor2 = GPIO.PWM(Motor2Pin, 50)
 Motor3 = GPIO.PWM(Motor3Pin, 50)
 water = GPIO.PWM(waterMotor, 50)
 
 # Turn everything off
-Motor1.start(7.5)
-Motor2.start(7.5)
-Motor3.start(7.5)
-water.start(7.5)
+Motor1.start(0)
+Motor2.start(0)
+Motor3.start(0)
+water.start(0)
 
 # We in this for the long haul
 while True:
@@ -45,7 +51,7 @@ while True:
 
     # Get the website data from the URL
     r = requests.get("http://0.0.0.0:80")
-    
+
     # Grab and transcribe the raw html using Beautiful Soup
     data = r.content
     page_soup = BeautifulSoup(data, "html.parser")
@@ -94,43 +100,47 @@ while True:
     for x in range(len(pill1_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill1_hour_list[x]) and now.minute == int(pill1_minute_list[x]):
-            Motor1.ChangeDutyCycle(10)
-            sleep += pill1_numpills[x]*2.6
-            time.sleep(pill1_numpills[x]*2.6)
-            Motor1.ChangeDutyCycle(7.5)
+            Motor1.ChangeDutyCycle(5)
+            sleep += pill1_numpills[x] * 1.3
+            time.sleep(pill1_numpills[x] * 1.3)
+            Motor1.ChangeDutyCycle(0)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     for x in range(len(pill2_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill2_hour_list[x]) and now.minute == int(pill2_minute_list[x]):
-            sleep += pill2_numpills[x] * 2.6
-            Motor2.ChangeDutyCycle(10)
-            time.sleep(pill2_numpills[x] * 2.6)
-            Motor2.ChangeDutyCycle(7.5)
+            sleep += pill2_numpills[x] * 1.3
+            Motor2.ChangeDutyCycle(5)
+            time.sleep(pill2_numpills[x] * 1.3)
+            Motor2.ChangeDutyCycle(0)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     for x in range(len(pill3_hour_list)):
         # Compare the current hour to the hour in the list and the current minute to the minute in the list
         if now.hour == int(pill3_hour_list[x]) and now.minute == int(pill3_minute_list[x]):
-            Motor3.ChangeDutyCycle(10)
-            sleep += pill3_numpills[x] * 2.6
-            time.sleep(pill3_numpills[x] * 2.6)
-            Motor3.ChangeDutyCycle(7.5)
+            Motor3.ChangeDutyCycle(5)
+            sleep += pill3_numpills[x] * 1.3
+            time.sleep(pill3_numpills[x] * 1.3)
+            Motor3.ChangeDutyCycle(0)
             # Allows you to see it actually working
             print("Dispensing Pill")
             watering = True
     if watering:
-        # Set the water servo to 0 degrees
-        water.ChangeDutyCycle(2.5)
-        arduinoSerialData.write('y')
+        arduinoSerialData.write('y'.encode())
         sleep += 8
+        water.ChangeDutyCycle(5)
+        # os.system('echo "turning usb ports off"')
+        # os.system('sudo /home/pi/hub-ctrl -h 0 -P 2 -p 0')
         time.sleep(6)
-        water.ChangeDutyCycle(7.5)
-        os.system('pills.mp3')
+        water.ChangeDutyCycle(0)
+        # os.system('echo "turning usb ports on"')
+        # os.system('sudo /home/pi/hub-ctrl -h 0 -P 2 -p 1')
+        # os.system('pills.mp3')
     else:
-        arduinoSerialData.write('n')
+        arduinoSerialData.write('n'.encode())
 
     # This is dependent on how fast the machine is. For us it would generally take a second to run through the code
-    time.sleep(60-sleep)
+    time.sleep(60 - sleep)
+GPIO.cleanup()
